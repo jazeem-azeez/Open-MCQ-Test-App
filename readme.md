@@ -4,9 +4,7 @@ Running the App
     ```bash
     npx electron .
     ``` 
-     
-
-    Enter the GitHub raw URL of the markdown file and load the quiz. 
+Enter the GitHub raw URL of the markdown file and load the quiz. 
      
 
 Explanation  
