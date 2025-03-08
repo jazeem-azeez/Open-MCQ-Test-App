@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCQ Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .results {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>MCQ Quiz</h1>
+
+  <!-- GitHub URL Input -->
+  <div v-if="!quiz.subject">
+    <h2>Enter GitHub Raw URL</h2>
+    <input type="text" v-model="githubUrl" placeholder="https://raw.githubusercontent.com/..." />
+    <button @click="fetchQuiz">Load Quiz</button>
+  </div>
+
+  <!-- Quiz Display -->
+  <div v-if="quiz.subject">
+    <h1>{{ quiz.subject }}</h1>
+    <p><strong>Minimum Score Required:</strong> {{ quiz.minScore }}</p>
+
+    <form v-if="quiz.questions.length">
+      <div v-for="(question, index) in quiz.questions" :key="index" class="question">
+        <p><strong>{{ index + 1 }}. {{ question.question }}</strong></p>
+        <div v-html="renderMarkdown(question.question)"></div>
+        <label v-for="option in question.options" :key="option[0]">
+          <input type="radio" :name="'q' + index" :value="option[0]" v-model="userAnswers[question.question]" />
+          {{ option[0] }}) 
+          <span v-html="renderMarkdown(option[1])"></span>
+        </label>
+      </div>
+      <button type="button" @click="submitQuiz">Submit</button>
+    </form>
+
+    <!-- Results -->
+    <div v-if="results" class="results">
+      <h2>Results</h2>
+      <p><strong>Total Score:</strong> {{ results.totalScore }}</p>
+      <p><strong>Passed:</strong> {{ results.passed ? 'Yes' : 'No' }}</p>
+      <div v-for="result in results.results" :key="result.question">
+        <p><strong>{{ result.question }}</strong></p>
+        <p>Your Answer: {{ result.userAnswer || 'Not answered' }}</p>
+        <p>Correct Answer: {{ result.correctAnswer }}</p>
+        <p>Score: {{ result.score }}</p>
+        <hr />
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
